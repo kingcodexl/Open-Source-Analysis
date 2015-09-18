@@ -8,11 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-#import <UIKit/UIKit.h>
-
+typedef NS_ENUM(NSInteger, ENUM_INDEXTYPE){
+    LEFTTYPE,
+    RIGTHTYPE,
+};
 @interface JSIndexPath : NSObject
-
+/**
+ *  列
+ */
 @property (nonatomic, assign) NSInteger column;
+
+@property (nonatomic, assign) ENUM_INDEXTYPE leftOrright;
+/**
+ *  记录当前是左还是右
+ */
 // 0 左边   1 右边
 @property (nonatomic, assign) NSInteger leftOrRight;
 // 左边行
@@ -25,19 +34,34 @@
 
 @end
 
+#pragma mark - 代理声明，这些声明是为了让这些操作在外部实现。类比tableview的代理设计
+
 #pragma mark - data source protocol
 @class JSDropDownMenu;
-
+/**
+ * 菜单数据源协议
+ */
 @protocol JSDropDownMenuDataSource <NSObject>
 
 @required
+/**
+ * 一共多少行
+ */
 - (NSInteger)menu:(JSDropDownMenu *)menu numberOfRowsInColumn:(NSInteger)column leftOrRight:(NSInteger)leftOrRight leftRow:(NSInteger)leftRow;
+/**
+ * 行内容
+ */
 - (NSString *)menu:(JSDropDownMenu *)menu titleForRowAtIndexPath:(JSIndexPath *)indexPath;
+/**
+ * 列内容
+ */
 - (NSString *)menu:(JSDropDownMenu *)menu titleForColumn:(NSInteger)column;
+
 /**
  * 表视图显示时，左边表显示比例
  */
 - (CGFloat)widthRatioOfLeftColumn:(NSInteger)column;
+
 /**
  * 表视图显示时，是否需要两个表显示
  */
@@ -83,6 +107,9 @@
  *  @return menu
  */
 - (instancetype)initWithOrigin:(CGPoint)origin andHeight:(CGFloat)height;
-- (NSString *)titleForRowAtIndexPath:(JSIndexPath *)indexPath;
+
+#warning 不需要，因为在代理中已经有这个方法
+// 每一列显示的字符
+//- (NSString *)titleForRowAtIndexPath:(JSIndexPath *)indexPath;
 
 @end

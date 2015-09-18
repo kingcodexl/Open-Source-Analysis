@@ -12,9 +12,11 @@
 // 选中颜色加深
 #define SelectColor [UIColor colorWithRed:238.0f/255.0f green:238.0f/255.0f blue:238.0f/255.0f alpha:1.0]
 
+#pragma mark - 字符串分类 获得字符串的textSize
 @interface NSString (Size)
 
 - (CGSize)textSizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)calculateTitleSizeWithString:(NSString *)string;
 
 @end
 
@@ -34,6 +36,7 @@
         NSStringDrawingOptions option = NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
         //NSStringDrawingTruncatesLastVisibleLine如果文本内容超出指定的矩形限制，文本将被截去并在最后一个字符后加上省略号。 如果指定了NSStringDrawingUsesLineFragmentOrigin选项，则该选项被忽略 NSStringDrawingUsesFontLeading计算行高时使用行间距。（字体大小+行间距=行高）
         NSDictionary *attributes = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+        
         CGRect rect = [self boundingRectWithSize:size
                                          options:option
                                       attributes:attributes
@@ -44,11 +47,24 @@
     return textSize;
 }
 
+- (CGSize)calculateTitleSizeWithString:(NSString *)string
+{
+    CGFloat fontSize = 14.0;
+    NSDictionary *dic = @{NSFontAttributeName: [UIFont systemFontOfSize:fontSize]};
+    CGSize size = [string boundingRectWithSize:CGSizeMake(280, 0)
+                                       options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                    attributes:dic
+                                       context:nil].size;
+    return size;
+}
 @end
 
+#pragma mark - cell定义 UICollectionViewCell，用于图片混排
+/* 每个cell*/
 @interface JSCollectionViewCell:UICollectionViewCell
-
+//显示的文字
 @property(nonatomic,strong) UILabel *textLabel;
+//图片
 @property(nonatomic,strong) UIImageView *accessoryView;
 
 -(void)removeAccessoryView;
@@ -80,7 +96,7 @@
 }
 
 -(void)removeAccessoryView{
-    
+    // 移除之前，判断是否存在
     if(_accessoryView){
         
         [_accessoryView removeFromSuperview];
@@ -90,7 +106,7 @@
 @end
 
 
-
+#pragma mark - cell定义 UITableViewCell 用于单一的text显示
 @interface JSTableViewCell : UITableViewCell
 
 @property(nonatomic,readonly) UILabel *cellTextLabel;
@@ -118,20 +134,25 @@
 -(void)setCellText:(NSString *)text align:(NSString*)align{
     
     _cellTextLabel.text = text;
+    
     // 只取宽度
     CGSize textSize = [text textSizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(MAXFLOAT, 14) lineBreakMode:NSLineBreakByWordWrapping];
 //    CGSize textSize = [text sizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(MAXFLOAT, 14)];
     
+    // 边距
     CGFloat marginX = 20;
-    
+    // 如果是左边距
     if (![@"left" isEqualToString:align]) {
+        //居中
         marginX = (self.frame.size.width-textSize.width)/2;
     }
     
     _cellTextLabel.frame = CGRectMake(marginX, 0, textSize.width, self.frame.size.height);
     
+    // 先判断是否存在
     if(_cellAccessoryView){
-        _cellAccessoryView.frame = CGRectMake(_cellTextLabel.frame.origin.x+_cellTextLabel.frame.size.width+10, (self.frame.size.height-12)/2, 16, 12);
+        //_cellAccessoryView.frame = CGRectMake(_cellTextLabel.frame.origin.x+_cellTextLabel.frame.size.width+10, (self.frame.size.height-12)/2, 16, 12);
+        _cellAccessoryView.frame = CGRectMake(CGRectGetMaxX(_cellTextLabel.frame), (self.frame.size.height - self.cellAccessoryView.frame.size.height) / 2 , 16, 12);
     }
 }
 
@@ -143,7 +164,7 @@
     
     _cellAccessoryView = accessoryView;
     
-    _cellAccessoryView.frame = CGRectMake(_cellTextLabel.frame.origin.x+_cellTextLabel.frame.size.width+10, (self.frame.size.height-12)/2, 16, 12);
+    _cellAccessoryView.frame = CGRectMake(_cellTextLabel.frame.origin.x+_cellTextLabel.frame.size.width+10, (self.frame.size.height - accessoryView.frame.size.height)/2, 16, 12);
     
     [self addSubview:_cellAccessoryView];
 }
@@ -151,6 +172,7 @@
 @end
 
 @implementation JSIndexPath
+
 - (instancetype)initWithColumn:(NSInteger)column leftOrRight:(NSInteger)leftOrRight  leftRow:(NSInteger)leftRow row:(NSInteger)row {
     self = [super init];
     if (self) {
@@ -163,6 +185,7 @@
 }
 
 + (instancetype)indexPathWithCol:(NSInteger)col leftOrRight:(NSInteger)leftOrRight leftRow:(NSInteger)leftRow row:(NSInteger)row {
+    
     JSIndexPath *indexPath = [[self alloc] initWithColumn:col leftOrRight:leftOrRight leftRow:leftRow row:row];
     return indexPath;
 }
@@ -171,6 +194,7 @@
 #pragma mark - menu implementation
 
 @interface JSDropDownMenu ()
+
 @property (nonatomic, assign) NSInteger currentSelectedMenudIndex;
 @property (nonatomic, assign) BOOL show;
 @property (nonatomic, assign) NSInteger numOfMenu;
@@ -180,9 +204,11 @@
 @property (nonatomic, strong) UITableView *leftTableView;
 @property (nonatomic, strong) UITableView *rightTableView;
 @property (nonatomic, strong) UICollectionView *collectionView;
+
 //data source
 @property (nonatomic, copy) NSArray *array;
-//layers array
+
+//layers array  通过层来做。性能更好，没有触摸事件
 @property (nonatomic, copy) NSArray *titles;
 @property (nonatomic, copy) NSArray *indicators;
 @property (nonatomic, copy) NSArray *bgLayers;
@@ -194,7 +220,7 @@
 
 @implementation JSDropDownMenu
 
-#pragma mark - getter
+#pragma mark - getter 懒加载
 - (UIColor *)indicatorColor {
     if (!_indicatorColor) {
         _indicatorColor = [UIColor blackColor];
@@ -216,32 +242,51 @@
     return _separatorColor;
 }
 
+/*
+ -(BOOL) isKindOfClass: classObj 用来判断是否是某个类或其子类的实例
+ -(BOOL) isMemberOfClass: classObj 用来判断是否是某个类的实例
+ -(BOOL) respondsToSelector: selector 用来判断是否有以某个名字命名的方法(被封装在一个selector的对象里传递)
+ +(BOOL) instancesRespondToSelector: selector 用来判断实例是否有以某个名字命名的方法. 和上面一个不同之处在于, 前面这个方法可以用在实例和类上，而此方法只能用在类上.
+ -(id) performSelector: selector 执行某个方法*/
 - (NSString *)titleForRowAtIndexPath:(JSIndexPath *)indexPath {
-    return [self.dataSource menu:self titleForRowAtIndexPath:indexPath];
+    
+    //调用代理方法
+    if ([self.dataSource respondsToSelector:@selector(menu: titleForRowAtIndexPath:)]) {
+        return [self.dataSource menu:self titleForRowAtIndexPath:indexPath];
+    }else{
+        return @"test";
+    }
+    
+    
 }
 
 #pragma mark - setter
+/* 在代理的set方法中完成配置，比如界面的元素，调用代理的方法*/
 - (void)setDataSource:(id<JSDropDownMenuDataSource>)dataSource {
     _dataSource = dataSource;
     
     //configure view
     if ([_dataSource respondsToSelector:@selector(numberOfColumnsInMenu:)]) {
+        //调用代理方法
         _numOfMenu = [_dataSource numberOfColumnsInMenu:self];
     } else {
         _numOfMenu = 1;
     }
-    
+    //设置顶级菜单的文字间隔，分割线及背景间隔
     CGFloat textLayerInterval = self.frame.size.width / ( _numOfMenu * 2);
     
     CGFloat separatorLineInterval = self.frame.size.width / _numOfMenu;
     
     CGFloat bgLayerInterval = self.frame.size.width / _numOfMenu;
     
+    
     NSMutableArray *tempTitles = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
     NSMutableArray *tempIndicators = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
     NSMutableArray *tempBgLayers = [[NSMutableArray alloc] initWithCapacity:_numOfMenu];
     
+    //批量设置顶级菜单
     for (int i = 0; i < _numOfMenu; i++) {
+        
         //bgLayer
         CGPoint bgLayerPosition = CGPointMake((i+0.5)*bgLayerInterval, self.frame.size.height/2);
         CALayer *bgLayer = [self createBgLayerWithColor:BackColor andPosition:bgLayerPosition];
@@ -253,7 +298,8 @@
         CATextLayer *title = [self createTextLayerWithNSString:titleString withColor:self.textColor andPosition:titlePosition];
         [self.layer addSublayer:title];
         [tempTitles addObject:title];
-        //indicator
+        
+        //indicator  - 那个三角形 通过CAShapeLayer来画各种图形
         CAShapeLayer *indicator = [self createIndicatorWithColor:self.indicatorColor andPosition:CGPointMake(titlePosition.x + title.bounds.size.width / 2 + 8, self.frame.size.height / 2)];
         [self.layer addSublayer:indicator];
         [tempIndicators addObject:indicator];
@@ -268,6 +314,7 @@
     
     _bottomShadow.backgroundColor = self.separatorColor;
     
+    // 拷贝一份
     _titles = [tempTitles copy];
     _indicators = [tempIndicators copy];
     _bgLayers = [tempBgLayers copy];
@@ -303,6 +350,8 @@
         
         [_collectionView registerClass:[JSCollectionViewCell class] forCellWithReuseIdentifier:@"CollectionCell"];
         _collectionView.backgroundColor = [UIColor colorWithRed:220.f/255.0f green:220.f/255.0f blue:220.f/255.0f alpha:1.0];
+        
+        
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         
@@ -331,31 +380,69 @@
     return self;
 }
 
-#pragma mark - init support
+#pragma mark - init support 通过layer实现
 - (CALayer *)createBgLayerWithColor:(UIColor *)color andPosition:(CGPoint)position {
     CALayer *layer = [CALayer layer];
     
+    //postion父视图显示的位置 anchorPoint那个点去填
     layer.position = position;
+ 
     layer.bounds = CGRectMake(0, 0, self.frame.size.width/self.numOfMenu, self.frame.size.height-1);
     layer.backgroundColor = color.CGColor;
     
     return layer;
 }
 
+
+/**
+ * 
+ 1,CAShapeLayer继承自CALayer，可使用CALayer的所有属性
+ 2,CAShapeLayer需要和贝塞尔曲线配合使用才有意义。
+ Shape：形状
+ 贝塞尔曲线可以为其提供形状，而单独使用CAShapeLayer是没有任何意义的。
+ 3,使用CAShapeLayer与贝塞尔曲线可以实现不在view的DrawRect方法中画出一些想要的图形
+ 
+ 关于CAShapeLayer和DrawRect的比较
+ DrawRect：DrawRect属于CoreGraphic框架，占用CPU，消耗性能大
+ CAShapeLayer：CAShapeLayer属于CoreAnimation框架，通过GPU来渲染图形，节省性能。动画渲染直接提交给手机GPU，不消耗内存
+ 
+ 贝塞尔曲线与CAShapeLayer的关系
+ 1，CAShapeLayer中shape代表形状的意思，所以需要形状才能生效
+ 2，贝塞尔曲线可以创建基于矢量的路径
+ 3，贝塞尔曲线给CAShapeLayer提供路径，CAShapeLayer在提供的路径中进行渲染。路径会闭环，所以绘制出了Shape
+ 4，用于CAShapeLayer的贝塞尔曲线作为Path，其path是一个首尾相接的闭环的曲线，即使该贝塞尔曲线不是一个闭环的曲线
+ */
+/*步奏
+ *
+ 1、新建UIBezierPath对象bezierPath
+ 2、新建CAShapeLayer对象caShapeLayer
+ 3、将bezierPath的CGPath赋值给caShapeLayer的path，即caShapeLayer.path = bezierPath.CGPath
+ 4、把caShapeLayer添加到某个显示该图形的layer中
+ */
 - (CAShapeLayer *)createIndicatorWithColor:(UIColor *)color andPosition:(CGPoint)point {
+    // 创建
     CAShapeLayer *layer = [CAShapeLayer new];
     
     UIBezierPath *path = [UIBezierPath new];
+    
+    // 绘制三角形，其实可以绘制多种图形-----》创意
+    //起点
     [path moveToPoint:CGPointMake(0, 0)];
     [path addLineToPoint:CGPointMake(8, 0)];
     [path addLineToPoint:CGPointMake(4, 5)];
     [path closePath];
     
+    // 绘制
     layer.path = path.CGPath;
+    // 绘制的宽度
     layer.lineWidth = 1.0;
+    // 填充的颜色
     layer.fillColor = color.CGColor;
     
+    
+    //上下文的路径
     CGPathRef bound = CGPathCreateCopyByStrokingPath(layer.path, nil, layer.lineWidth, kCGLineCapButt, kCGLineJoinMiter, layer.miterLimit);
+    
     layer.bounds = CGPathGetBoundingBox(bound);
     
     CGPathRelease(bound);
@@ -369,11 +456,13 @@
     CAShapeLayer *layer = [CAShapeLayer new];
     
     UIBezierPath *path = [UIBezierPath new];
+    //起点
     [path moveToPoint:CGPointMake(160,0)];
     [path addLineToPoint:CGPointMake(160, self.frame.size.height)];
     
     layer.path = path.CGPath;
     layer.lineWidth = 1.0;
+    // 颜色
     layer.strokeColor = color.CGColor;
     
     CGPathRef bound = CGPathCreateCopyByStrokingPath(layer.path, nil, layer.lineWidth, kCGLineCapButt, kCGLineJoinMiter, layer.miterLimit);
@@ -386,6 +475,7 @@
     return layer;
 }
 
+#pragma mark - 通过layer创建文字
 - (CATextLayer *)createTextLayerWithNSString:(NSString *)string withColor:(UIColor *)color andPosition:(CGPoint)point {
     
     CGSize size = [self calculateTitleSizeWithString:string];
@@ -416,6 +506,7 @@
 #pragma mark - gesture handle
 - (void)menuTapped:(UITapGestureRecognizer *)paramSender {
     CGPoint touchPoint = [paramSender locationInView:self];
+    
     //calculate index
     NSInteger tapIndex = touchPoint.x / (self.frame.size.width / _numOfMenu);
     
@@ -559,24 +650,33 @@
     [(CALayer *)self.bgLayers[_currentSelectedMenudIndex] setBackgroundColor:BackColor.CGColor];
 }
 
+
 #pragma mark - animation method
 - (void)animateIndicator:(CAShapeLayer *)indicator Forward:(BOOL)forward complete:(void(^)())complete {
+    
     [CATransaction begin];
     [CATransaction setAnimationDuration:0.25];
     [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.4 :0.0 :0.2 :1.0]];
     
+    // 帧动画，实现旋转
     CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
+    //这里注意把0装箱成对象
     anim.values = forward ? @[ @0, @(M_PI) ] : @[ @(M_PI), @0 ];
     
     if (!anim.removedOnCompletion) {
+        
         [indicator addAnimation:anim forKey:anim.keyPath];
+        
     } else {
+        
         [indicator addAnimation:anim forKey:anim.keyPath];
         [indicator setValue:anim.values.lastObject forKeyPath:anim.keyPath];
+        
     }
     
     [CATransaction commit];
     
+    // 回调函数
     complete();
 }
 

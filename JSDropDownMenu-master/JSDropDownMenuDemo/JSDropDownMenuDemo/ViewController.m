@@ -41,22 +41,26 @@
     _data1 = [NSMutableArray arrayWithObjects:@{@"title":@"美食", @"data":food}, @{@"title":@"旅游", @"data":travel}, nil];
     _data2 = [NSMutableArray arrayWithObjects:@"智能排序", @"离我最近", @"评价最高", @"最新发布", @"人气最高", @"价格最低", @"价格最高", nil];
     _data3 = [NSMutableArray arrayWithObjects:@"不限人数", @"单人餐", @"双人餐", @"3~4人餐", nil];
-    
+    // 确定位置
     menu = [[JSDropDownMenu alloc] initWithOrigin:CGPointMake(0, 20) andHeight:45];
+    // 样式
     menu.indicatorColor = [UIColor colorWithRed:175.0f/255.0f green:175.0f/255.0f blue:175.0f/255.0f alpha:1.0];
     menu.separatorColor = [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0];
     menu.textColor = [UIColor colorWithRed:83.f/255.0f green:83.f/255.0f blue:83.f/255.0f alpha:1.0f];
+    // 设置代理
     menu.dataSource = self;
     menu.delegate = self;
     
     [self.view addSubview:menu];
 }
-
+#pragma mark - JSDropDownMenuDataSource
+/* 列数*/
 - (NSInteger)numberOfColumnsInMenu:(JSDropDownMenu *)menu {
     
-    return 3;
+    return 4;
 }
 
+/* 是否显示为CollectionView*/
 -(BOOL)displayByCollectionViewInColumn:(NSInteger)column{
     
     if (column==2) {
@@ -67,6 +71,7 @@
     return NO;
 }
 
+/* 是否显示为两个tableview*/
 -(BOOL)haveRightTableViewInColumn:(NSInteger)column{
     
     if (column==0) {
@@ -75,15 +80,17 @@
     return NO;
 }
 
+/* 显示表视图x比例*/
 -(CGFloat)widthRatioOfLeftColumn:(NSInteger)column{
     
     if (column==0) {
-        return 0.3;
+        return 0.2;
     }
     
     return 1;
 }
 
+/* 返回默认选中行*/
 -(NSInteger)currentLeftSelectedRow:(NSInteger)column{
     
     if (column==0) {
@@ -99,6 +106,7 @@
     return 0;
 }
 
+/* 设置数据源*/
 - (NSInteger)menu:(JSDropDownMenu *)menu numberOfRowsInColumn:(NSInteger)column leftOrRight:(NSInteger)leftOrRight leftRow:(NSInteger)leftRow{
     
     if (column==0) {
@@ -137,18 +145,21 @@
     }
 }
 
+/* 具体某一个cell的内容*/
 - (NSString *)menu:(JSDropDownMenu *)menu titleForRowAtIndexPath:(JSIndexPath *)indexPath {
     
-    if (indexPath.column==0) {
-        if (indexPath.leftOrRight==0) {
+    if (indexPath.column == 0) {
+        //左边
+        if (indexPath.leftOrRight == 0) {
             NSDictionary *menuDic = [_data1 objectAtIndex:indexPath.row];
             return [menuDic objectForKey:@"title"];
         } else{
+        //右边
             NSInteger leftRow = indexPath.leftRow;
             NSDictionary *menuDic = [_data1 objectAtIndex:leftRow];
             return [[menuDic objectForKey:@"data"] objectAtIndex:indexPath.row];
         }
-    } else if (indexPath.column==1) {
+    } else if (indexPath.column == 1) {
         
         return _data2[indexPath.row];
         
@@ -158,12 +169,14 @@
     }
 }
 
+#pragma  mark - JSDropDownMenuDelegate
+/* 选中cell*/
 - (void)menu:(JSDropDownMenu *)menu didSelectRowAtIndexPath:(JSIndexPath *)indexPath {
     
     if (indexPath.column == 0) {
         
         if(indexPath.leftOrRight==0){
-            
+            //设置选中的cell
             _currentData1Index = indexPath.row;
             
             return;
