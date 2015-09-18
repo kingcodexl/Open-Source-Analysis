@@ -22,6 +22,7 @@
 
 // 底部视图
 @property (nonatomic, weak) LNWaterfallFlowFooterView *footerView;
+
 // 是否正在加载数据标记
 @property (nonatomic, assign, getter=isLoading) BOOL loading;
 
@@ -31,6 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 一加载完视图则加载数据
     [self loadData];
 }
 
@@ -44,6 +46,8 @@
     
     // 设置布局的属性
     self.waterfallFlowLayout.columnCount = 3;
+    
+    //给数据
     self.waterfallFlowLayout.goodsList = self.goodsList;
     
     
@@ -61,10 +65,22 @@
     // 创建可重用的cell
     LNWaterfallFlowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellCache"
                                                                           forIndexPath:indexPath];
-//    cell.backgroundColor = [UIColor colorWithRed:((float)arc4random_uniform(256) / 255.0)
-//                                           green:((float)arc4random_uniform(256) / 255.0)
-//                                            blue:((float)arc4random_uniform(256) / 255.0)
-//                                           alpha:1.0];
+    cell.backgroundColor = [UIColor colorWithRed:((float)arc4random_uniform(256) / 255.0)
+                                           green:((float)arc4random_uniform(256) / 255.0)
+                                            blue:((float)arc4random_uniform(256) / 255.0)
+                                           alpha:1.0];
+    
+    //arc4rando_uniform(不包括这个最大值)
+//    cell.backgroundColor = [UIColor colorWithRed:
+//                            ((float)arc4random_uniform(256) / 255.0)
+//                                           green:
+//                            ((float)arc4random_uniform(256) / 255.0)
+//                                            blue:
+//                            ((float)arc4random_uniform(256) / 255.0)
+//                                           alpha:
+//                            ((float)arc4random_uniform(11) / 10.0)
+//                            ];
+    //设置数据
     cell.good = self.goodsList[indexPath.item];
     return cell;
 }
@@ -86,26 +102,32 @@
 #pragma mark - scrollView代理方法
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
+    //不存在footerView
     if (self.footerView == nil || self.isLoading) {
         return;
     }
     
-
+    // 始终有一个height用户缓存
     if (self.footerView.frame.origin.y < (scrollView.contentOffset.y + scrollView.bounds.size.height)) {
+        NSLog(@"y: %f offset: %f bouceheight:%f ",self.footerView.frame.origin.y,scrollView.contentOffset.y,scrollView.bounds.size.height);
         NSLog(@"开始刷新");
+        
         // 如果正在刷新数据，不需要再次刷新
         self.loading = YES;
         [self.footerView.indicator startAnimating];
-        // 模拟数据刷新
+        
+        // 模拟数据刷新 通过GCD实现模拟
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.footerView = nil;
             [self loadData];
             self.loading = NO;
         });
+        
     }
 }
 
 
+//隐藏状态栏
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }

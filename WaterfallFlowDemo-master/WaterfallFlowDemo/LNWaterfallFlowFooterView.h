@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface LNWaterfallFlowFooterView : UICollectionReusableView
+
 // 指示器,需要暴露给外面
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 

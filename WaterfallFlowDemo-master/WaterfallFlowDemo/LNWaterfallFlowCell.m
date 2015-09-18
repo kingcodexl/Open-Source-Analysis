@@ -29,9 +29,6 @@
 
 //重写set方法，在赋值的时候给控件属性赋值
 - (void)setGood1:(LNGood *)good {
-    int a;
-    NSInteger b;
-    
     _good = good;
     NSURL *url = [NSURL URLWithString:good.img];
     [self.iconView sd_setImageWithURL:url];
