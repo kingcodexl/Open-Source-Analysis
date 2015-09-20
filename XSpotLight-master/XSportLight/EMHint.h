@@ -2,22 +2,25 @@
 #import <Foundation/Foundation.h>
 #import "EMHintsView.h"
 
+/**
+ 高亮的类型
+ */
 typedef enum
 {
     EMHintShapeTypeRound,
     EMHintShapeTypeRectangle//TODO
 }EMHintShapeType;
 
+// 代理
 @protocol EMHintDelegate <NSObject>
 
 @optional
 
 -(BOOL)hintStateHasDefaultTapGestureRecognizer:(id)hintState ;
 
-
-
-/*
- // return an array of UIView where spotlights should shine     
+/**
+ *  返回高亮的数组
+ *
  */
 -(NSArray*)hintStateViewsToHint:(id)hintState;
 

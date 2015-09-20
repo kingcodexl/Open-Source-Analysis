@@ -19,6 +19,7 @@
 		2AD324A51B88A67600C67ED9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD324A41B88A67600C67ED9 /* Images.xcassets */; };
 		2AD324A81B88A67600C67ED9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AD324A61B88A67600C67ED9 /* LaunchScreen.xib */; };
 		2AD324B41B88A67600C67ED9 /* XSportLightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AD324B31B88A67600C67ED9 /* XSportLightTests.m */; };
+		7AB2C5301BAEEC1D000C9A4F /* NSString+Size.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB2C52F1BAEEC1D000C9A4F /* NSString+Size.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		2AD324AD1B88A67600C67ED9 /* XSportLightTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XSportLightTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD324B21B88A67600C67ED9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AD324B31B88A67600C67ED9 /* XSportLightTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XSportLightTests.m; sourceTree = "<group>"; };
+		7AB2C52E1BAEEC1D000C9A4F /* NSString+Size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Size.h"; sourceTree = "<group>"; };
+		7AB2C52F1BAEEC1D000C9A4F /* NSString+Size.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Size.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +110,7 @@
 		2AD324931B88A67600C67ED9 /* XSportLight */ = {
 			isa = PBXGroup;
 			children = (
+				7AB2C52D1BAEEC0B000C9A4F /* Utilize */,
 				2A885AF31B8AE342000C432B /* XSportLight */,
 				2AD324981B88A67600C67ED9 /* AppDelegate.h */,
 				2AD324991B88A67600C67ED9 /* AppDelegate.m */,
@@ -146,6 +150,15 @@
 				2AD324B21B88A67600C67ED9 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7AB2C52D1BAEEC0B000C9A4F /* Utilize */ = {
+			isa = PBXGroup;
+			children = (
+				7AB2C52E1BAEEC1D000C9A4F /* NSString+Size.h */,
+				7AB2C52F1BAEEC1D000C9A4F /* NSString+Size.m */,
+			);
+			name = Utilize;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AB2C5301BAEEC1D000C9A4F /* NSString+Size.m in Sources */,
 				2AB157D51B8A14A7008CE626 /* XSportLight.m in Sources */,
 				2AD3249A1B88A67600C67ED9 /* AppDelegate.m in Sources */,
 				2AD324971B88A67600C67ED9 /* main.m in Sources */,

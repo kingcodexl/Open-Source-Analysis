@@ -1,6 +1,6 @@
 
 #import "EMHint.h"
-
+#import "NSString+Size.h"
 @implementation EMHint
 @synthesize hintDelegate;
 
@@ -10,10 +10,12 @@
     [_modalView removeFromSuperview];
     _modalView = nil;
 }
+
 -(UIView*)modalView
 {
     return _modalView;
 }
+
 -(UIView *)presentModalMessage:(NSString*)message where:(UIView*)presentationPlace
 {
     //incase we have many in a row
@@ -44,7 +46,8 @@
     {
         //label
         UIFont *ft = [UIFont fontWithName:@"Helvetica" size:17.0];
-        CGSize sz = [message sizeWithFont:ft constrainedToSize:CGSizeMake(250, 1000)];
+        CGSize sz = [message testSizeWithFont:ft];
+        //CGSize sz = [message sizeWithFont:ft constrainedToSize:CGSizeMake(250, 1000)];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(floorf(presentationPlace.center.x - sz.width/2),
                                                                    floorf(presentationPlace.center.y - sz.height/2),
                                                                    floorf(sz.width),
