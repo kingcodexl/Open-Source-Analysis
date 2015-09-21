@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SXDistrictViewController">
+            <connections>
+                <outlet property="leftTableView" destination="KnV-sR-cmT" id="PEq-ZH-ZSl"/>
+                <outlet property="rightTableView" destination="aLP-IN-Sws" id="hai-Ru-xKo"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Bv-J7-axb">
+                    <rect key="frame" x="0.0" y="0.0" width="400" height="38"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_cell_rightArrow" translatesAutoresizingMaskIntoConstraints="NO" id="E85-cb-B5N">
+                            <rect key="frame" x="362" y="0.0" width="38" height="38"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="38" id="EeH-Vd-eF5"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s4h-fY-f0L">
+                            <rect key="frame" x="0.0" y="0.0" width="400" height="38"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="切换城市" image="btn_changeCity">
+                                <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="cityBtnChange" destination="-1" eventType="touchUpInside" id="Eij-7p-F6r"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="s4h-fY-f0L" firstAttribute="top" secondItem="4Bv-J7-axb" secondAttribute="top" id="2bG-wI-OLB"/>
+                        <constraint firstItem="s4h-fY-f0L" firstAttribute="leading" secondItem="4Bv-J7-axb" secondAttribute="leading" id="AUW-9h-s2e"/>
+                        <constraint firstAttribute="trailing" secondItem="s4h-fY-f0L" secondAttribute="trailing" id="FPy-id-8Us"/>
+                        <constraint firstAttribute="bottom" secondItem="E85-cb-B5N" secondAttribute="bottom" id="Rq7-ho-Yak"/>
+                        <constraint firstItem="E85-cb-B5N" firstAttribute="top" secondItem="4Bv-J7-axb" secondAttribute="top" id="ey5-Ia-d3x"/>
+                        <constraint firstAttribute="bottom" secondItem="s4h-fY-f0L" secondAttribute="bottom" id="gNL-Ca-PVy"/>
+                        <constraint firstAttribute="trailing" secondItem="E85-cb-B5N" secondAttribute="trailing" id="mS8-ia-qjL"/>
+                        <constraint firstAttribute="height" constant="38" id="rC7-Nu-qjW"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="KnV-sR-cmT">
+                    <rect key="frame" x="0.0" y="38" width="200" height="462"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="ULP-2u-bta"/>
+                        <outlet property="delegate" destination="-1" id="KzO-7Q-tY9"/>
+                    </connections>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="aLP-IN-Sws">
+                    <rect key="frame" x="200" y="38" width="200" height="462"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="ONE-FJ-q1O"/>
+                        <outlet property="delegate" destination="-1" id="Pnr-se-y14"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="4Bv-J7-axb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="9Ak-sV-mO6"/>
+                <constraint firstAttribute="trailing" secondItem="4Bv-J7-axb" secondAttribute="trailing" id="Col-lO-9Iy"/>
+                <constraint firstItem="aLP-IN-Sws" firstAttribute="width" secondItem="KnV-sR-cmT" secondAttribute="width" id="Fxw-zm-CK6"/>
+                <constraint firstItem="KnV-sR-cmT" firstAttribute="top" secondItem="4Bv-J7-axb" secondAttribute="bottom" id="HW1-LD-OBf"/>
+                <constraint firstAttribute="bottom" secondItem="aLP-IN-Sws" secondAttribute="bottom" id="Njo-yg-18b"/>
+                <constraint firstItem="aLP-IN-Sws" firstAttribute="leading" secondItem="KnV-sR-cmT" secondAttribute="trailing" id="QfL-Hf-UpN"/>
+                <constraint firstItem="4Bv-J7-axb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="U0o-3S-L36"/>
+                <constraint firstAttribute="bottom" secondItem="KnV-sR-cmT" secondAttribute="bottom" id="aOu-WD-XaO"/>
+                <constraint firstItem="aLP-IN-Sws" firstAttribute="top" secondItem="4Bv-J7-axb" secondAttribute="bottom" id="cGy-5f-4mD"/>
+                <constraint firstItem="aLP-IN-Sws" firstAttribute="leading" secondItem="KnV-sR-cmT" secondAttribute="trailing" id="hd7-GV-kHv"/>
+                <constraint firstAttribute="trailing" secondItem="aLP-IN-Sws" secondAttribute="trailing" id="sir-ae-W5l"/>
+                <constraint firstItem="KnV-sR-cmT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="yAz-Cc-cZG"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="326" y="264"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="btn_changeCity" width="30" height="30"/>
+        <image name="icon_cell_rightArrow" width="17" height="17"/>
+    </resources>
+</document>

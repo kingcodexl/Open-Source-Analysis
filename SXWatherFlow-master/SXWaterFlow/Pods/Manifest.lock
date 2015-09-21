@@ -1,0 +1,18 @@
+PODS:
+  - MJExtension (0.2.0)
+  - MJRefresh (1.4.1)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+
+DEPENDENCIES:
+  - MJExtension
+  - MJRefresh
+  - SDWebImage
+
+SPEC CHECKSUMS:
+  MJExtension: 4d179914dbec2b6ca826f8296181fc1d4013781e
+  MJRefresh: 6a0fd4c81a957803bd99bbbf55a956d1d6f41263
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+
+COCOAPODS: 0.36.0

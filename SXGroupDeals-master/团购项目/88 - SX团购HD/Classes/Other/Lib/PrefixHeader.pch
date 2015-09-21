@@ -1,0 +1,28 @@
+//
+//  PrefixHeader.pch
+//  88 - SX团购HD
+//
+//  Created by 董 尚先 on 15/2/4.
+//  Copyright (c) 2015年 shangxianDante. All rights reserved.
+//
+
+#ifndef _4___HD_PrefixHeader_pch
+#define _4___HD_PrefixHeader_pch
+
+#ifdef DEBUG
+#define SXLog(...) NSLog(__VA_ARGS__)
+#else
+#define SXLog(...)
+#endif
+
+#define SXColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+
+#define SXARGBColor(a,r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+
+#define SXNoteCenter [NSNotificationCenter defaultCenter]
+
+#import "UIView+Frame.h"
+#import "SXConst.h"
+#import "SXSingleton.h"
+
+#endif
